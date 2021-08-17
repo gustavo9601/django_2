@@ -1,9 +1,12 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
-
+# Con el decorador, se usa como middleware, de autenticacion, en caso de no estar autenticado
+# redireccionara la pagina a la variable definida en settings.py LOGIN_URL
+@login_required
 def list_posts(request: WSGIRequest):
     posts = [
         {

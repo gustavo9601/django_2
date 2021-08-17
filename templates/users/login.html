@@ -1,0 +1,31 @@
+{% extends "users/base.html" %}
+
+{% block head_content %}
+<title>Instagus sign in</title>
+{% endblock%}
+
+{% block container %}
+
+<!--Si existe la variable enviada por parametro en el render-->
+{% if error %}
+<p class="alert alert-danger">{{ error }}</p>
+{% endif%}
+
+<!--url 'login'  // Usa el nombre que se le definio a la ruta para buscarla en el urls.py-->
+<form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <input class="form-control" type="text" placeholder="Username" name="username"/>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" type="password" placeholder="Password" name="password"/>
+    </div>
+
+
+    <button class="btn btn-primary btn-block mt-5" type="submit">Sign in!</button>
+
+</form>
+
+{% endblock %}
