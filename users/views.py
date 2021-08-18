@@ -1,6 +1,7 @@
 # Django
 from sqlite3 import IntegrityError
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,8 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from users.models import Profile
 
-def login_view(request):
+# Forms
+from users.forms import ProfileForm
 
+
+def login_view(request):
     if request.user.is_authenticated:
         return redirect('/posts/')
 
@@ -28,6 +32,7 @@ def login_view(request):
             return render(request, 'users/login.html', {'error': 'Invalidate username or password'})
 
     return render(request, 'users/login.html')
+
 
 @login_required
 def logout_view(request):
@@ -63,3 +68,33 @@ def signup(request):
         return redirect('login')
 
     return render(request, 'users/signup.html')
+
+@login_required
+def update_profile(request):
+
+    profile = request.user.profile
+    user = request.user
+    if request.method == 'POST':
+        # Usando una clase de form request, se le pasa la info por post, y si se envian archivos FILES
+        form: ProfileForm = ProfileForm(request.POST, request.FILES)
+        # Si todas las validaciones pasaron
+        if form.is_valid():
+            print(form.cleaned_data)
+            data = form.cleaned_data
+            profile.website = data['website']
+            profile.biography = data['biography']
+            profile.phone_number = data['phone_number']
+            profile.picture = data['picture']
+            profile.save()
+
+            return redirect('update_profile')
+
+    else:
+        form = ProfileForm()
+
+    return render(request, 'users/update_profile.html',
+                  context={
+                      'profile': profile,
+                      'user': user,
+                      'form': form
+                  })
