@@ -19,7 +19,7 @@
             form.attribute.value  // permite acceder al valor enviado por el form temporalmente, a modo de mostrar
                                   // al usuario que fue lo que envio
             -->
-            <form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'users:update_profile' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="media">
